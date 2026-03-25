@@ -1,0 +1,236 @@
+/* AI Tools Page Styling */
+
+.ai-tools-page {
+  background: #F5F0E8;
+  min-height: calc(100vh - 70px);
+  padding: 2rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ai-tools-page .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ai-tools-page h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem;
+  color: #2C3E50;
+  margin: 0 0 0.5rem 0;
+}
+
+.ai-tools-page .subtitle {
+  color: #999;
+  font-size: 1rem;
+  margin: 0 0 2rem 0;
+}
+
+/* Tools Grid */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tool-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 4px solid #D4A574;
+}
+
+.tool-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(44, 62, 80, 0.15);
+}
+
+.tool-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.tool-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.3rem;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.tool-card p {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.tool-card .btn {
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  align-self: center;
+  margin-top: auto;
+}
+
+.tool-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(44, 62, 80, 0.3);
+}
+
+/* Tool Interface Modal */
+.tool-interface {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tool-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #2C3E50;
+}
+
+.tool-content h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  color: #2C3E50;
+  margin: 0 0 0.5rem 0;
+}
+
+.tool-content p {
+  color: #666;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Tool-specific forms/content */
+.tool-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tool-form input,
+.tool-form textarea,
+.tool-form select {
+  padding: 0.75rem;
+  border: 2px solid #E8E3D8;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.tool-form input:focus,
+.tool-form textarea:focus,
+.tool-form select:focus {
+  outline: none;
+  border-color: #D4A574;
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+}
+
+.tool-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.tool-form button {
+  padding: 0.75rem;
+  background: #D4A574;
+  color: #2C3E50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tool-form button:hover {
+  background: #C49464;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ai-tools-page {
+    padding: 1rem;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-card {
+    padding: 1.5rem;
+  }
+
+  .tool-content {
+    max-width: 95%;
+  }
+}

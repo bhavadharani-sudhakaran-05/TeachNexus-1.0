@@ -1,0 +1,398 @@
+/* Gamification Page Styling */
+
+.gamification-page {
+  background: #F5F0E8;
+  min-height: calc(100vh - 70px);
+  padding: 2rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.gamification-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gamification-header {
+  margin-bottom: 2rem;
+}
+
+.gamification-header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem;
+  color: #2C3E50;
+  margin: 0 0 0.5rem 0;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: white;
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #999;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.tab-btn:hover {
+  color: #D4A574;
+}
+
+.tab-btn.active {
+  background: #D4A574;
+  color: white;
+  border-color: #D4A574;
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Overview Tab */
+.overview-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.overview-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border-top: 4px solid #D4A574;
+}
+
+.overview-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(44, 62, 80, 0.1);
+}
+
+.overview-stat-card h3 {
+  font-size: 0.85rem;
+  color: #999;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: 0.5px;
+}
+
+.overview-stat-card .big-number {
+  font-family: 'Sora', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.overview-stat-card p {
+  color: #27AE60;
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+/* Badges Tab */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1.5rem;
+}
+
+.badge-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.badge-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(44, 62, 80, 0.1);
+}
+
+.badge-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.badge-name {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.badge-rarity {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Leaderboard Tab */
+.leaderboard-table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.leaderboard-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th {
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.leaderboard-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #E8E3D8;
+}
+
+.leaderboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+.leaderboard-table tr:hover {
+  background: #F5F0E8;
+}
+
+.rank-cell {
+  font-weight: 600;
+  color: #D4A574;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.rank-1 {
+  color: #FFD700;
+}
+
+.rank-2 {
+  color: #C0C0C0;
+}
+
+.rank-3 {
+  color: #CD7F32;
+}
+
+.teacher-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.teacher-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4A574, #C49464);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.teacher-name {
+  font-weight: 600;
+  color: #2C3E50;
+}
+
+.xp-cell {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  color: #2C3E50;
+  font-size: 1.05rem;
+}
+
+.level-badge {
+  background: #D4A574;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Challenges Tab */
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.challenge-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border-left: 4px solid #D4A574;
+}
+
+.challenge-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(44, 62, 80, 0.1);
+}
+
+.challenge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.challenge-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+  flex: 1;
+}
+
+.challenge-difficulty {
+  background: #FFE8CC;
+  color: #E67E22;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+}
+
+.challenge-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.75rem 0;
+  line-height: 1.5;
+}
+
+.challenge-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #E8E3D8;
+  border-bottom: 1px solid #E8E3D8;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.stat-value {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  color: #2C3E50;
+  font-size: 1.3rem;
+}
+
+.challenge-action {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.challenge-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gamification-page {
+    padding: 1rem;
+  }
+
+  .tab-navigation {
+    gap: 0.5rem;
+  }
+
+  .tab-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .overview-stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .badges-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+  }
+
+  .challenges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-table {
+    font-size: 0.9rem;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
