@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaArrowRight, FaStar, FaUsers, FaBook, FaAward } from 'react-icons/fa';
+import { FaUsers, FaBook, FaAward } from 'react-icons/fa';
 import '../styles/landing.css';
 
 const LandingPage = () => {
