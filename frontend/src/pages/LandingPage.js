@@ -58,7 +58,7 @@ const LandingPage = () => {
             <p>Lesson Plans Created</p>
           </div>
           <div className="stat-card">
-            <h3>5K+</h3>
+            <h3>8K+</h3>
             <p>Schools Onboarded</p>
           </div>
         </div>
@@ -100,7 +100,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; 2024 TeachNexus. Empowering educators worldwide.</p>
+          <p>&copy; 2026 TeachNexus. Empowering educators worldwide.</p>
         </div>
       </footer>
     </div>
