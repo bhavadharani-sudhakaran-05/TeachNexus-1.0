@@ -1,0 +1,672 @@
+/* Lesson Planner Styling - TeachNexus Design System */
+
+.lesson-planner-page {
+  background: #fefaf6;
+  min-height: calc(100vh - 70px);
+  padding: 2rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.planner-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ========== HEADER ========== */
+.planner-header {
+  margin-bottom: 2rem;
+}
+
+.planner-header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 0 0 0.5rem 0;
+}
+
+.planner-header p {
+  color: #666;
+  margin: 0;
+}
+
+/* ========== CONTROLS ========== */
+.planner-controls {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(30, 58, 95, 0.08);
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  background: #f8f7f4;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+  border-color: #f59e0b;
+  background: white;
+}
+
+.search-icon {
+  color: #f59e0b;
+  margin-right: 0.8rem;
+}
+
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+}
+
+.search-bar input::placeholder {
+  color: #999;
+}
+
+.view-options {
+  display: flex;
+  gap: 0.6rem;
+  background: #f8f7f4;
+  padding: 0.4rem;
+  border-radius: 8px;
+}
+
+.view-btn {
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #666;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.view-btn.active {
+  background: white;
+  color: #f59e0b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-create {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #f59e0b, #f87a20);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.btn-create:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+}
+
+/* ========== PLANNER CONTENT ========== */
+.planner-content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+}
+
+/* ========== CALENDAR SIDEBAR ========== */
+.calendar-sidebar {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(30, 58, 95, 0.08);
+  height: fit-content;
+  position: sticky;
+  top: 80px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e8e3d8;
+}
+
+.calendar-header h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  color: #1e3a5f;
+  margin: 0;
+  font-weight: 600;
+}
+
+.calendar-header button {
+  background: #f8f7f4;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1e3a5f;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.calendar-header button:hover {
+  background: #f59e0b;
+  color: white;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-weight: 600;
+  color: #666;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  padding: 0.6rem 0;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #f8f7f4;
+  color: #999;
+  font-size: 0.85rem;
+  cursor: default;
+  position: relative;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.calendar-day.active {
+  cursor: pointer;
+  color: #1e3a5f;
+  background: white;
+  border: 1px solid #e8e3d8;
+}
+
+.calendar-day.active:hover {
+  border-color: #f59e0b;
+  background: #fffbf5;
+}
+
+.calendar-day.selected {
+  background: #f59e0b;
+  color: white;
+  border: none;
+}
+
+.calendar-day.has-lessons {
+  border: 2px solid #f59e0b;
+}
+
+.day-number {
+  font-size: 0.9rem;
+}
+
+.lesson-indicator {
+  position: absolute;
+  bottom: 2px;
+  font-size: 0.6rem;
+  color: #f59e0b;
+}
+
+.calendar-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e8e3d8;
+}
+
+.filter-icon {
+  color: #f59e0b;
+  font-size: 0.9rem;
+}
+
+.calendar-filter select {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #e8e3d8;
+  border-radius: 6px;
+  background: white;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #1e3a5f;
+}
+
+.calendar-filter select:focus {
+  outline: none;
+  border-color: #f59e0b;
+}
+
+/* ========== PLANNER MAIN ========== */
+.planner-main {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(30, 58, 95, 0.08);
+}
+
+.planner-main h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e3a5f;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Month View */
+.month-view .lessons-list {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.lesson-card {
+  background: #fefaf6;
+  border: 2px solid #e8e3d8;
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.lesson-card:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+  transform: translateX(4px);
+}
+
+.lesson-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.lesson-card-header h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.2rem;
+  color: #1e3a5f;
+  margin: 0;
+  flex: 1;
+}
+
+.subject-badge {
+  background: #1e3a5f;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lesson-desc {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.lesson-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e8e3d8;
+  font-size: 0.85rem;
+  color: #666;
+  flex-wrap: wrap;
+}
+
+.lesson-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.btn-edit,
+.btn-delete {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border: 2px solid #e8e3d8;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn-edit:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+  background: #fffbf5;
+}
+
+.btn-delete:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+  background: #ffe8e8;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #999;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.coming-soon {
+  color: #999;
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 58, 95, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(30, 58, 95, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border-bottom: 1px solid #e8e3d8;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.modal-header h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  color: #1e3a5f;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #1e3a5f;
+}
+
+/* ========== FORM ========== */
+.lesson-form {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #1e3a5f;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e8e3d8;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #1e3a5f;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #f59e0b;
+  background: #fffbf5;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-row .form-group {
+  margin-bottom: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8e3d8;
+}
+
+.btn-cancel,
+.btn-submit,
+.btn-ai {
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  flex: 1;
+  background: #f8f7f4;
+  border: 2px solid #e8e3d8;
+  color: #1e3a5f;
+}
+
+.btn-cancel:hover {
+  border-color: #1e3a5f;
+  background: #f0e8dc;
+}
+
+.btn-submit {
+  flex: 1;
+  background: linear-gradient(135deg, #f59e0b, #f87a20);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+}
+
+.btn-ai {
+  background: #1e3a5f;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
+.btn-ai:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .planner-content {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .lesson-planner-page {
+    padding: 1rem;
+  }
+
+  .planner-header h1 {
+    font-size: 2rem;
+  }
+
+  .planner-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-bar {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .view-options {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-create {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .planner-main {
+    padding: 1.5rem;
+  }
+
+  .modal-header {
+    padding: 1.5rem;
+  }
+
+  .lesson-form {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-header {
+    gap: 0.5rem;
+  }
+
+  .calendar-header h3 {
+    font-size: 0.95rem;
+  }
+
+  .lesson-card {
+    padding: 1rem;
+  }
+
+  .lesson-card-header {
+    flex-direction: column;
+  }
+
+  .subject-badge {
+    align-self: flex-start;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .btn-cancel,
+  .btn-submit,
+  .btn-ai {
+    width: 100%;
+  }
+}
