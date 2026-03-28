@@ -71,6 +71,10 @@ export const communityAPI = {
   joinCommunity: (id) => api.post(`/community/${id}/join`),
   createThread: (communityId, data) => api.post(`/community/${communityId}/discussions`, data),
   getThreads: (communityId, filters) => api.get(`/community/${communityId}/discussions`, { params: filters }),
+  addReply: (communityId, threadId, data) =>
+    api.post(`/community/${communityId}/discussions/${threadId}/replies`, data),
+  likeThread: (communityId, threadId) =>
+    api.post(`/community/${communityId}/discussions/${threadId}/like`),
 };
 
 export const aiToolsAPI = {
