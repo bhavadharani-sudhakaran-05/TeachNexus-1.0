@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { communityAPI } from '../utils/api';
 import { useAuthStore } from '../context/store';
 import toast from 'react-hot-toast';
@@ -34,11 +34,20 @@ const CommunityPage = () => {
     tags: '',
   });
 
-  useEffect(() => {
-    loadCommunities();
+  const loadThreads = useCallback(async (communityId) => {
+    setIsLoadingThreads(true);
+    try {
+      const response = await communityAPI.getThreads(communityId, { limit: 50 });
+      setThreads(response.data.threads || []);
+    } catch (error) {
+      toast.error('Failed to load discussions');
+      setThreads([]);
+    } finally {
+      setIsLoadingThreads(false);
+    }
   }, []);
 
-  const loadCommunities = async () => {
+  const loadCommunities = useCallback(async () => {
     setIsLoadingCommunities(true);
     try {
       const response = await communityAPI.getCommunities({ limit: 50 });
@@ -55,20 +64,11 @@ const CommunityPage = () => {
     } finally {
       setIsLoadingCommunities(false);
     }
-  };
+  }, [loadThreads]);
 
-  const loadThreads = async (communityId) => {
-    setIsLoadingThreads(true);
-    try {
-      const response = await communityAPI.getThreads(communityId, { limit: 50 });
-      setThreads(response.data.threads || []);
-    } catch (error) {
-      toast.error('Failed to load discussions');
-      setThreads([]);
-    } finally {
-      setIsLoadingThreads(false);
-    }
-  };
+  useEffect(() => {
+    loadCommunities();
+  }, [loadCommunities]);
 
   const selectCommunity = async (community) => {
     setSelectedCommunity(community);
