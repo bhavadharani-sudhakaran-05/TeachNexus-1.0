@@ -358,6 +358,25 @@
   box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
 }
 
+.gamification-empty {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  color: #666;
+  border: 1px dashed #d9d0c2;
+}
+
+.challenge-action:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.challenge-action-completed {
+  background: linear-gradient(135deg, #27ae60, #219150);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .gamification-page {
