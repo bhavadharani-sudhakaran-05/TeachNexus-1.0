@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { lessonPlanAPI, aiToolsAPI } from '../utils/api';
 import toast from 'react-hot-toast';
 import '../styles/lesson-planner.css';
 
 const LessonPlannerPage = () => {
-  const [mode, setMode] = useState('create'); // 'create' or 'edit'
+  const location = useLocation();
   const [formData, setFormData] = useState({
     title: '',
     subject: '',
@@ -16,22 +17,27 @@ const LessonPlannerPage = () => {
   const [aiGenerated, setAiGenerated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const prefill = location.state?.prefill;
+    if (!prefill) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      ...prefill.formData,
+      objectives: prefill.formData?.objectives?.length ? prefill.formData.objectives : prev.objectives,
+      materials: prefill.formData?.materials?.length ? prefill.formData.materials : prev.materials,
+    }));
+
+    if (prefill.aiGenerated) {
+      setAiGenerated(prefill.aiGenerated);
+    }
+
+    toast.success('AI output loaded into Lesson Planner.');
+  }, [location.state]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleArrayInputChange = (e, field, index) => {
-    const newArray = [...formData[field]];
-    newArray[index] = e.target.value;
-    setFormData({ ...formData, [field]: newArray });
-  };
-
-  const addArrayItem = (field) => {
-    setFormData({
-      ...formData,
-      [field]: [...formData[field], ''],
-    });
   };
 
   const generateWithAI = async () => {
