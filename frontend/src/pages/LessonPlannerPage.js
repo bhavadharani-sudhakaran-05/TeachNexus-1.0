@@ -132,9 +132,11 @@ const LessonPlannerPage = () => {
               </div>
             </div>
 
-            <button className="btn btn-primary" onClick={generateWithAI} disabled={isLoading}>
-              ✨ {isLoading ? 'Generating...' : 'Generate with AI'}
-            </button>
+            <div className="generate-sticky">
+              <button className="btn btn-primary" onClick={generateWithAI} disabled={isLoading}>
+                ✨ {isLoading ? 'Generating...' : 'Generate with AI'}
+              </button>
+            </div>
           </div>
 
           {/* Preview Section */}

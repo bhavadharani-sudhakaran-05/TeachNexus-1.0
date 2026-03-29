@@ -3,10 +3,79 @@ import { aiToolsAPI } from '../utils/api';
 import toast from 'react-hot-toast';
 import '../styles/ai-tools.css';
 
+const TOOL_CONFIG = [
+  {
+    id: 'lesson-planner',
+    name: 'AI Lesson Planner',
+    description: 'Generate complete lesson plans in seconds',
+    icon: '📝',
+  },
+  {
+    id: 'resource-summarizer',
+    name: 'Resource Summarizer',
+    description: 'Get key points from any teaching material',
+    icon: '📚',
+  },
+  {
+    id: 'voice-converter',
+    name: 'Voice to Lesson Plan',
+    description: 'Convert your voice notes into lesson plans',
+    icon: '🎤',
+  },
+  {
+    id: 'whiteboard-scanner',
+    name: 'Whiteboard Scanner',
+    description: 'Digitalize and organize whiteboard content',
+    icon: '✏️',
+  },
+  {
+    id: 'student-predictor',
+    name: 'Student Performance Predictor',
+    description: 'Identify at-risk students early',
+    icon: '📊',
+  },
+  {
+    id: 'gap-analyzer',
+    name: 'Resource Gap Analyzer',
+    description: 'Find critical gaps in available resources',
+    icon: '🎯',
+  },
+];
+
+const EXAMPLES = {
+  'lesson-planner': {
+    topic: 'Introduction to Photosynthesis',
+    gradeLevel: 'Grade 9',
+    duration: '45 minutes',
+  },
+  'resource-summarizer': {
+    resourceContent:
+      'Photosynthesis is the process by which green plants convert light energy into chemical energy. Chlorophyll captures sunlight in chloroplasts. Carbon dioxide and water are used to produce glucose and oxygen. Light-dependent reactions occur in the thylakoid membranes, while the Calvin cycle happens in the stroma.',
+  },
+  'voice-converter': {
+    voiceNote:
+      'Today I want students to explain how photosynthesis works, compare chloroplast structure and function, and complete a concept map in groups. We will start with a quick warm-up question and end with an exit ticket.',
+  },
+  'whiteboard-scanner': {
+    whiteboardNotes:
+      'Topic: Ecosystems\n- Producers, consumers, decomposers\n- Food chains and food webs\n- Energy pyramid\nHomework: Draw a food web from your local environment.',
+  },
+  'student-predictor': {
+    className: 'Grade 10 Science A',
+    studentData:
+      'Aisha|78,80,84|95|high\nNoah|52,49,55|72|low\nPriya|68,70,66|88|medium',
+  },
+  'gap-analyzer': {
+    subject: 'Science',
+    gapGradeLevel: 'Grade 10',
+  },
+};
+
 const AIToolsPage = () => {
   const [selectedTool, setSelectedTool] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [lastRunAt, setLastRunAt] = useState(null);
   const [formValues, setFormValues] = useState({
     topic: '',
     gradeLevel: '',
@@ -20,47 +89,8 @@ const AIToolsPage = () => {
     gapGradeLevel: '',
   });
 
-  const tools = [
-    {
-      id: 'lesson-planner',
-      name: 'AI Lesson Planner',
-      description: 'Generate complete lesson plans in seconds',
-      icon: '📝',
-    },
-    {
-      id: 'resource-summarizer',
-      name: 'Resource Summarizer',
-      description: 'Get key points from any teaching material',
-      icon: '📚',
-    },
-    {
-      id: 'voice-converter',
-      name: 'Voice to Lesson Plan',
-      description: 'Convert your voice notes into lesson plans',
-      icon: '🎤',
-    },
-    {
-      id: 'whiteboard-scanner',
-      name: 'Whiteboard Scanner',
-      description: 'Digitalize and organize whiteboard content',
-      icon: '✏️',
-    },
-    {
-      id: 'student-predictor',
-      name: 'Student Performance Predictor',
-      description: 'Identify at-risk students early',
-      icon: '📊',
-    },
-    {
-      id: 'gap-analyzer',
-      name: 'Resource Gap Analyzer',
-      description: 'Find critical gaps in available resources',
-      icon: '🎯',
-    },
-  ];
-
   const selectedToolDetails = useMemo(
-    () => tools.find((tool) => tool.id === selectedTool),
+    () => TOOL_CONFIG.find((tool) => tool.id === selectedTool),
     [selectedTool]
   );
 
@@ -82,11 +112,13 @@ const AIToolsPage = () => {
   const openTool = (toolId) => {
     setSelectedTool(toolId);
     setResult(null);
+    setLastRunAt(null);
   };
 
   const closeTool = () => {
     setSelectedTool(null);
     setResult(null);
+    setLastRunAt(null);
   };
 
   const onChange = (event) => {
@@ -95,6 +127,23 @@ const AIToolsPage = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const applyExampleInput = () => {
+    const exampleData = EXAMPLES[selectedTool];
+    if (!exampleData) return;
+
+    setFormValues((prev) => ({
+      ...prev,
+      ...exampleData,
+    }));
+    toast.success('Example data applied.');
+  };
+
+  const resetCurrentTool = () => {
+    setResult(null);
+    setLastRunAt(null);
+    toast.success('Output cleared.');
   };
 
   const parseStudentData = (rawText) => {
@@ -127,8 +176,40 @@ const AIToolsPage = () => {
       .filter((student) => student.studentName);
   };
 
+  const validateBeforeRun = () => {
+    if (!selectedTool) return false;
+
+    const requiredByTool = {
+      'lesson-planner': ['topic', 'gradeLevel', 'duration'],
+      'resource-summarizer': ['resourceContent'],
+      'voice-converter': ['voiceNote'],
+      'whiteboard-scanner': ['whiteboardNotes'],
+      'student-predictor': ['className', 'studentData'],
+      'gap-analyzer': ['subject', 'gapGradeLevel'],
+    };
+
+    const missing = (requiredByTool[selectedTool] || []).filter((key) => !String(formValues[key] || '').trim());
+
+    if (missing.length) {
+      toast.error('Please complete all required fields before running this tool.');
+      return false;
+    }
+
+    if (selectedTool === 'student-predictor') {
+      const parsed = parseStudentData(formValues.studentData);
+      if (!parsed.length) {
+        toast.error('Student data format is invalid. Use Name|80,70,60|90|medium per line.');
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const executeTool = async (event) => {
     event.preventDefault();
+    if (!validateBeforeRun()) return;
+
     setIsLoading(true);
 
     try {
@@ -177,6 +258,7 @@ const AIToolsPage = () => {
       }
 
       setResult(response.data);
+      setLastRunAt(new Date());
       toast.success('AI tool completed successfully.');
     } catch (error) {
       const message = error.response?.data?.message || 'Something went wrong while running the tool.';
@@ -184,6 +266,168 @@ const AIToolsPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+      toast.success('Output copied to clipboard.');
+    } catch {
+      toast.error('Unable to copy output.');
+    }
+  };
+
+  const downloadResult = () => {
+    if (!result || !selectedTool) return;
+
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${selectedTool}-output.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const renderList = (items) => {
+    if (!items || !items.length) {
+      return <p className="empty-inline">No items available.</p>;
+    }
+
+    return (
+      <ul className="formatted-list">
+        {items.map((item, index) => (
+          <li key={`${item}-${index}`}>{item}</li>
+        ))}
+      </ul>
+    );
+  };
+
+  const renderStructuredResult = () => {
+    if (!result) {
+      return <p className="result-placeholder">Run the tool to see output here.</p>;
+    }
+
+    if (selectedTool === 'lesson-planner') {
+      const lessonPlan = result.lessonPlan || {};
+      return (
+        <div className="result-panel">
+          <h3>{lessonPlan.title || 'Generated Lesson Plan'}</h3>
+          <p>{lessonPlan.introduction}</p>
+
+          <h4>Objectives</h4>
+          {renderList(lessonPlan.objectives)}
+
+          <h4>Materials</h4>
+          {renderList(lessonPlan.materials)}
+
+          <h4>Learning Flow</h4>
+          <p><strong>Strategies:</strong> {lessonPlan.instructionalStrategies || 'N/A'}</p>
+          <p><strong>Activities:</strong> {lessonPlan.studentActivities || 'N/A'}</p>
+          <p><strong>Assessment:</strong> {lessonPlan.assessment || 'N/A'}</p>
+        </div>
+      );
+    }
+
+    if (selectedTool === 'resource-summarizer') {
+      const summary = result.summary || {};
+      return (
+        <div className="result-panel">
+          <h3>{summary.title || 'Resource Summary'}</h3>
+          <p>{summary.summary}</p>
+          <h4>Key Points</h4>
+          {renderList(summary.keyPoints)}
+          <h4>Learning Outcomes</h4>
+          {renderList(summary.learningOutcomes)}
+        </div>
+      );
+    }
+
+    if (selectedTool === 'voice-converter') {
+      const lessonPlan = result.lessonPlan || {};
+      return (
+        <div className="result-panel">
+          <h3>{lessonPlan.title || 'Converted Lesson Plan'}</h3>
+          <p>{lessonPlan.content || 'No lesson plan content available.'}</p>
+        </div>
+      );
+    }
+
+    if (selectedTool === 'whiteboard-scanner') {
+      const extracted = result.extractedContent || {};
+      return (
+        <div className="result-panel">
+          <h3>Scanned Whiteboard</h3>
+          <h4>Extracted Text</h4>
+          <p>{extracted.text || 'No extracted text.'}</p>
+          <h4>Formatted Lesson Content</h4>
+          <p>{extracted.formattedLessonContent || 'No formatted lesson content.'}</p>
+        </div>
+      );
+    }
+
+    if (selectedTool === 'student-predictor') {
+      const analysis = result.analysis || {};
+      return (
+        <div className="result-panel">
+          <h3>Class Trend: {analysis.overallClassTrend || 'N/A'}</h3>
+          <h4>At-Risk Students</h4>
+          {!analysis.riskStudents?.length ? (
+            <p className="empty-inline">No risk students identified.</p>
+          ) : (
+            <div className="result-cards">
+              {analysis.riskStudents.map((student, index) => (
+                <div className="result-card" key={`${student.studentName}-${index}`}>
+                  <p><strong>{student.studentName}</strong> ({student.riskLevel || 'unknown'})</p>
+                  <p>{(student.riskFactors || []).join(', ') || 'No factors listed.'}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          <h4>Class Strengths</h4>
+          {renderList(analysis.classStrengths)}
+          <h4>Areas of Improvement</h4>
+          {renderList(analysis.classAreasOfImprovement)}
+        </div>
+      );
+    }
+
+    if (selectedTool === 'gap-analyzer') {
+      const gapAnalysis = result.gapAnalysis || {};
+      return (
+        <div className="result-panel">
+          <h3>{gapAnalysis.subject || 'Subject'} - {gapAnalysis.gradeLevel || 'Grade'}</h3>
+          <div className="metric-row">
+            <span>Coverage: {gapAnalysis.resourceCoveragePercentage ?? 0}%</span>
+            <span>Underserved Topics: {gapAnalysis.underservedTopics ?? 0}</span>
+            <span>Total Topics: {gapAnalysis.totalTopics ?? 0}</span>
+          </div>
+
+          <h4>Critical Gaps</h4>
+          {!gapAnalysis.criticalGaps?.length ? (
+            <p className="empty-inline">No critical gaps found.</p>
+          ) : (
+            <div className="result-cards">
+              {gapAnalysis.criticalGaps.map((gap, index) => (
+                <div className="result-card" key={`${gap.topic}-${index}`}>
+                  <p><strong>{gap.topic}</strong></p>
+                  <p>{gap.reason || 'No reason provided.'}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="result-panel">
+        <h3>Output</h3>
+        <pre>{JSON.stringify(result, null, 2)}</pre>
+      </div>
+    );
   };
 
   const renderToolForm = () => {
@@ -282,27 +526,19 @@ const AIToolsPage = () => {
     }
   };
 
-  const renderResult = () => {
-    if (!result) {
-      return <p className="result-placeholder">Run the tool to see output here.</p>;
-    }
-
-    return (
-      <div className="result-panel">
-        <h3>Output</h3>
-        <pre>{JSON.stringify(result, null, 2)}</pre>
-      </div>
-    );
-  };
-
   return (
     <div className="ai-tools-page">
       <div className="container">
         <h1>🤖 AI-Powered Tools</h1>
         <p className="subtitle">Transform your teaching with intelligent assistance</p>
+        <div className="tool-summary-strip">
+          <span>{TOOL_CONFIG.length} Intelligent Tools</span>
+          <span>Fast Classroom Workflows</span>
+          <span>Input, Generate, Apply</span>
+        </div>
 
         <div className="tools-grid">
-          {tools.map((tool) => (
+          {TOOL_CONFIG.map((tool) => (
             <div key={tool.id} className="tool-card">
               <div className="tool-icon">{tool.icon}</div>
               <h3>{tool.name}</h3>
@@ -327,13 +563,27 @@ const AIToolsPage = () => {
 
               <div className="tool-workspace">
                 <form className="tool-form" onSubmit={executeTool}>
+                  <div className="tool-form-actions">
+                    <button type="button" onClick={applyExampleInput}>Use Example</button>
+                    <button type="button" onClick={resetCurrentTool}>Clear Output</button>
+                  </div>
+
                   {renderToolForm()}
                   <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Working...' : 'Generate'}
                   </button>
                 </form>
 
-                {renderResult()}
+                <div>
+                  {renderStructuredResult()}
+                  {result && (
+                    <div className="result-actions">
+                      <button type="button" onClick={copyResult}>Copy JSON</button>
+                      <button type="button" onClick={downloadResult}>Download JSON</button>
+                      {lastRunAt && <span>Last run: {lastRunAt.toLocaleTimeString()}</span>}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
