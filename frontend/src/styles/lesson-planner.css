@@ -265,3 +265,154 @@
     font-size: 1.5rem;
   }
 }
+
+/* Active Lesson PlannerPage selectors */
+.lesson-planner {
+  background: linear-gradient(180deg, #f5f0e8 0%, #f8f4ed 100%);
+  min-height: calc(100vh - 70px);
+  padding: 2rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.lesson-planner .container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.lesson-planner h1 {
+  margin: 0 0 1.5rem;
+  color: #1f3448;
+  font-size: clamp(1.8rem, 1.2rem + 1.6vw, 2.5rem);
+  font-family: 'Sora', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.lesson-planner .planner-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.lesson-planner .planner-form,
+.lesson-planner .planner-preview {
+  background: #ffffff;
+  border: 1px solid #ebe3d6;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 22px rgba(32, 44, 66, 0.08);
+}
+
+.lesson-planner .planner-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.lesson-planner .form-group {
+  margin-bottom: 1rem;
+}
+
+.lesson-planner .form-group label {
+  color: #223a4f;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.lesson-planner .form-group input,
+.lesson-planner .form-group select {
+  width: 100%;
+  border: 2px solid #e6dfd2;
+  border-radius: 12px;
+  background: #fffdf9;
+  color: #1f3448;
+  min-height: 52px;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+}
+
+.lesson-planner .form-group input:focus,
+.lesson-planner .form-group select:focus {
+  outline: none;
+  border-color: #d4a574;
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+}
+
+.lesson-planner .btn.btn-primary {
+  border: 0;
+  border-radius: 12px;
+  min-height: 52px;
+  padding: 0.8rem 1.2rem;
+  background: linear-gradient(120deg, #cf9a62, #b37a43);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.03rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.lesson-planner .btn.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(179, 122, 67, 0.25);
+}
+
+.lesson-planner .btn.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.lesson-planner .planner-preview h2 {
+  margin: 0 0 1rem;
+  color: #1f3448;
+  font-family: 'Sora', sans-serif;
+  font-size: 1.25rem;
+}
+
+.lesson-planner .preview-content {
+  background: #fffaf2;
+  border: 1px solid #f0e3cf;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.lesson-planner .preview-content h3 {
+  color: #2a4158;
+  margin: 0.9rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.lesson-planner .preview-content h3:first-child {
+  margin-top: 0;
+}
+
+.lesson-planner .preview-content ul {
+  margin: 0 0 0.4rem;
+  padding-left: 1.2rem;
+}
+
+.lesson-planner .preview-content li,
+.lesson-planner .preview-content p {
+  color: #4f5c69;
+  line-height: 1.5;
+}
+
+.lesson-planner .preview-content .btn.btn-primary {
+  margin-top: 0.8rem;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .lesson-planner {
+    padding: 1rem;
+  }
+
+  .lesson-planner .planner-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-planner .planner-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
