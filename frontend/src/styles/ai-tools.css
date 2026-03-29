@@ -117,8 +117,8 @@
   background: white;
   border-radius: 12px;
   padding: 2rem;
-  max-width: 600px;
-  width: 90%;
+  max-width: 980px;
+  width: min(94vw, 980px);
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
@@ -176,6 +176,20 @@
   gap: 1rem;
 }
 
+.tool-workspace {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.2fr);
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.tool-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: -0.5rem;
+}
+
 .tool-form input,
 .tool-form textarea,
 .tool-form select {
@@ -197,7 +211,7 @@
 
 .tool-form textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 120px;
 }
 
 .tool-form button {
@@ -216,6 +230,45 @@
   transform: translateY(-2px);
 }
 
+.tool-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
+
+.result-panel {
+  background: #f8f7f4;
+  border: 1px solid #e9e3d8;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.result-panel h3 {
+  margin: 0 0 0.75rem 0;
+  color: #2C3E50;
+  font-size: 1rem;
+}
+
+.result-panel pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 420px;
+  overflow: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #22313f;
+}
+
+.result-placeholder {
+  background: #f8f7f4;
+  border: 1px dashed #d5c6b4;
+  border-radius: 10px;
+  color: #7a7a7a;
+  margin: 0;
+  padding: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .ai-tools-page {
@@ -232,5 +285,9 @@
 
   .tool-content {
     max-width: 95%;
+  }
+
+  .tool-workspace {
+    grid-template-columns: 1fr;
   }
 }
