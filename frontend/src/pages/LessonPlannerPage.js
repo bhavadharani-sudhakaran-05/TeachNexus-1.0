@@ -6,16 +6,20 @@ import '../styles/lesson-planner.css';
 
 const LessonPlannerPage = () => {
   const location = useLocation();
-  const [formData, setFormData] = useState({
+  const defaultFormData = {
     title: '',
     subject: '',
     gradeLevel: '',
     duration: '',
     objectives: [''],
     materials: [''],
+  };
+  const [formData, setFormData] = useState({
+    ...defaultFormData,
   });
   const [aiGenerated, setAiGenerated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [importedFromAiTools, setImportedFromAiTools] = useState(false);
 
   useEffect(() => {
     const prefill = location.state?.prefill;
@@ -32,8 +36,16 @@ const LessonPlannerPage = () => {
       setAiGenerated(prefill.aiGenerated);
     }
 
+    setImportedFromAiTools(prefill.source === 'ai-tools');
     toast.success('AI output loaded into Lesson Planner.');
   }, [location.state]);
+
+  const clearImportedData = () => {
+    setFormData({ ...defaultFormData });
+    setAiGenerated(null);
+    setImportedFromAiTools(false);
+    toast.success('Imported AI data cleared.');
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,6 +100,15 @@ const LessonPlannerPage = () => {
     <div className="lesson-planner">
       <div className="container">
         <h1>📝 Lesson Planner</h1>
+
+        {importedFromAiTools && (
+          <div className="import-banner">
+            <p>Imported from AI Tools. Review and customize before saving.</p>
+            <button type="button" className="btn-clear-import" onClick={clearImportedData}>
+              Clear Imported Data
+            </button>
+          </div>
+        )}
 
         <div className="planner-layout">
           {/* Form Section */}

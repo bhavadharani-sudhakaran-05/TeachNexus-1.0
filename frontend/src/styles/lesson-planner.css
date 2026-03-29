@@ -287,6 +287,42 @@
   letter-spacing: -0.02em;
 }
 
+.import-banner {
+  background: linear-gradient(135deg, #fff7e8, #fff3df);
+  border: 1px solid #e5cfaa;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.import-banner p {
+  margin: 0;
+  color: #583f25;
+  font-weight: 600;
+}
+
+.btn-clear-import {
+  border: 1px solid #c89961;
+  background: #fff;
+  color: #7a4d1b;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-clear-import:hover {
+  background: #ffefd6;
+  border-color: #b98040;
+}
+
 .lesson-planner .planner-layout {
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
@@ -406,6 +442,11 @@
 @media (max-width: 900px) {
   .lesson-planner {
     padding: 1rem;
+  }
+
+  .import-banner {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .lesson-planner .planner-layout {
