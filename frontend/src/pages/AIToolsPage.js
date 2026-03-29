@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { aiToolsAPI } from '../utils/api';
 import toast from 'react-hot-toast';
 import '../styles/ai-tools.css';
@@ -72,6 +73,7 @@ const EXAMPLES = {
 };
 
 const AIToolsPage = () => {
+  const navigate = useNavigate();
   const [selectedTool, setSelectedTool] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -289,6 +291,30 @@ const AIToolsPage = () => {
     link.download = `${selectedTool}-output.json`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const sendToLessonPlanner = () => {
+    if (selectedTool !== 'lesson-planner' || !result?.lessonPlan) return;
+
+    const durationMatch = String(formValues.duration || '').match(/\d+/);
+    const normalizedDuration = durationMatch ? durationMatch[0] : '';
+
+    navigate('/lesson-planner', {
+      state: {
+        prefill: {
+          formData: {
+            title: formValues.topic || result.lessonPlan.title || '',
+            subject: '',
+            gradeLevel: formValues.gradeLevel || '',
+            duration: normalizedDuration,
+            objectives: result.lessonPlan.objectives || [''],
+            materials: result.lessonPlan.materials || [''],
+          },
+          aiGenerated: result.lessonPlan,
+          source: 'ai-tools',
+        },
+      },
+    });
   };
 
   const renderList = (items) => {
@@ -578,6 +604,9 @@ const AIToolsPage = () => {
                   {renderStructuredResult()}
                   {result && (
                     <div className="result-actions">
+                      {selectedTool === 'lesson-planner' && (
+                        <button type="button" onClick={sendToLessonPlanner}>Send to Lesson Planner</button>
+                      )}
                       <button type="button" onClick={copyResult}>Copy JSON</button>
                       <button type="button" onClick={downloadResult}>Download JSON</button>
                       {lastRunAt && <span>Last run: {lastRunAt.toLocaleTimeString()}</span>}
