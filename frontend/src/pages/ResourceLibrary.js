@@ -6,6 +6,7 @@ import '../styles/resources.css';
 
 const ResourceLibrary = () => {
   const [resources, setResources] = useState([]);
+  const [relatedResources, setRelatedResources] = useState([]);
   const [filters, setFilters] = useState({ subject: '', gradeLevel: '', resourceType: '', search: '' });
   const [sortBy, setSortBy] = useState('recent');
   const [viewMode, setViewMode] = useState('grid');
@@ -17,6 +18,14 @@ const ResourceLibrary = () => {
   const [showRemixModal, setShowRemixModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [showCollectionsModal, setShowCollectionsModal] = useState(false);
+
+  // Detail view states
+  const [userRating, setUserRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   // Upload states
   const [uploadFile, setUploadFile] = useState(null);
@@ -33,7 +42,14 @@ const ResourceLibrary = () => {
   useEffect(() => {
     loadResources();
     loadFavorites();
+    loadCollections();
   }, [filters, sortBy]);
+
+  useEffect(() => {
+    if (showDetailModal && selectedResource) {
+      loadRelatedResources();
+    }
+  }, [showDetailModal, selectedResource]);
 
   const loadResources = async () => {
     setIsLoading(true);
@@ -162,6 +178,60 @@ const ResourceLibrary = () => {
       loadResources();
     } catch (error) {
       toast.error('Failed to remix resource');
+    }
+  };
+
+  const loadRelatedResources = async () => {
+    try {
+      const response = await resourceAPI.getResources({
+        subject: selectedResource.subject,
+        exclude: selectedResource._id,
+        limit: 4,
+      });
+      setRelatedResources(response.data.resources || []);
+    } catch (error) {
+      console.log('Could not load related resources');
+    }
+  };
+
+  const loadCollections = async () => {
+    try {
+      const response = await resourceAPI.getCollections();
+      setCollections(response.data.collections || []);
+    } catch (error) {
+      console.log('Could not load collections');
+    }
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!userRating || !reviewText.trim()) {
+      toast.error('Please provide a rating and review');
+      return;
+    }
+
+    try {
+      await resourceAPI.addReview(selectedResource._id, {
+        rating: userRating,
+        comment: reviewText,
+      });
+      toast.success('Review submitted successfully!');
+      setReviewText('');
+      setUserRating(0);
+      setShowReviewForm(false);
+      // Reload resource to get updated reviews
+      loadResources();
+    } catch (error) {
+      toast.error('Failed to submit review');
+    }
+  };
+
+  const handleAddToCollection = async (collectionId) => {
+    try {
+      await resourceAPI.addToCollection(collectionId, selectedResource._id);
+      toast.success('Resource added to collection!');
+    } catch (error) {
+      toast.error('Failed to add resource to collection');
     }
   };
 
@@ -569,8 +639,133 @@ const ResourceLibrary = () => {
                     <p>Based on: {selectedResource.remixedFromAuthor?.firstName}'s original</p>
                   </div>
                 )}
+
+                {/* Teacher Profile Card */}
+                {selectedResource.createdBy && (
+                  <div className="teacher-profile-card">
+                    <div className="teacher-avatar">
+                      {selectedResource.createdBy?.avatar ? (
+                        <img src={selectedResource.createdBy.avatar} alt={selectedResource.createdBy?.firstName} />
+                      ) : (
+                        <div className="avatar-placeholder">👨‍🏫</div>
+                      )}
+                    </div>
+                    <div className="teacher-info">
+                      <h4>{selectedResource.createdBy?.firstName} {selectedResource.createdBy?.lastName}</h4>
+                      <p className="teacher-role">{selectedResource.createdBy?.subject || 'Teacher'}</p>
+                      <p className="teacher-bio">{selectedResource.createdBy?.bio || 'Sharing quality educational resources'}</p>
+                      <button className="btn-visit-profile">View Profile</button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Reviews Section */}
+            <div className="reviews-section">
+              <div className="reviews-header">
+                <h3>Reviews ({selectedResource.rating?.ratingCount || 0})</h3>
+                <button className="btn-add-review" onClick={() => setShowReviewForm(!showReviewForm)}>
+                  ⭐ Write a Review
+                </button>
+              </div>
+
+              {showReviewForm && (
+                <form className="review-form" onSubmit={handleSubmitReview}>
+                  <div className="star-rating">
+                    <label>Your Rating:</label>
+                    <div className="stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          className={`star-btn ${userRating >= star ? 'active' : ''}`}
+                          onClick={() => setUserRating(star)}
+                        >
+                          <FaStar />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea
+                    placeholder="Share your thoughts about this resource..."
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    rows="3"
+                  />
+                  <div className="review-actions">
+                    <button type="button" className="btn-secondary" onClick={() => setShowReviewForm(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn-primary">
+                      Submit Review
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              <div className="reviews-list">
+                {selectedResource.reviews && selectedResource.reviews.length > 0 ? (
+                  <>
+                    {selectedResource.reviews.slice(0, showAllReviews ? undefined : 2).map((review, idx) => (
+                      <div key={idx} className="review-card">
+                        <div className="review-header">
+                          <div className="reviewer-info">
+                            <span className="reviewer-name">{review.userId?.firstName || 'Anonymous'}</span>
+                            <span className="review-date">
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <div className="review-rating">
+                            {[...Array(5)].map((_, i) => (
+                              <FaStar key={i} className={i < review.rating ? 'filled' : 'empty'} />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="review-comment">{review.comment}</p>
+                      </div>
+                    ))}
+                    {selectedResource.reviews.length > 2 && !showAllReviews && (
+                      <button className="btn-show-more" onClick={() => setShowAllReviews(true)}>
+                        Show All Reviews ({selectedResource.reviews.length})
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <p className="no-reviews">No reviews yet. Be the first to review!</p>
+                )}
+              </div>
+            </div>
+
+            {/* Related Resources */}
+            {relatedResources.length > 0 && (
+              <div className="related-resources-section">
+                <h3>Related Resources in {selectedResource.subject}</h3>
+                <div className="related-resources-grid">
+                  {relatedResources.map((resource) => (
+                    <div key={resource._id} className="related-resource-card">
+                      <div className="related-image">
+                        {resource.thumbnail ? (
+                          <img src={resource.thumbnail} alt={resource.title} />
+                        ) : (
+                          <span>📄</span>
+                        )}
+                      </div>
+                      <h4>{resource.title}</h4>
+                      <p className="related-meta">{resource.gradeLevel}</p>
+                      <button
+                        className="btn-view-details"
+                        onClick={() => {
+                          setSelectedResource(resource);
+                        }}
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="modal-actions">
               <button
@@ -584,6 +779,12 @@ const ResourceLibrary = () => {
                 onClick={() => handleFavorite(selectedResource._id)}
               >
                 <FaHeart /> {favorites.includes(selectedResource._id) ? 'Favorited' : 'Favorite'}
+              </button>
+              <button
+                className="btn-collections"
+                onClick={() => setShowCollectionsModal(true)}
+              >
+                📁 Add to Collection
               </button>
               <button
                 className="btn-primary"
@@ -642,6 +843,58 @@ const ResourceLibrary = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Collections Modal */}
+      {showCollectionsModal && selectedResource && (
+        <div className="modal-overlay" onClick={() => setShowCollectionsModal(false)}>
+          <div className="modal-content collections-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add to Collection</h2>
+              <button className="btn-close" onClick={() => setShowCollectionsModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="collections-content">
+              {collections && collections.length > 0 ? (
+                <div className="collections-grid">
+                  {collections.map((collection) => (
+                    <div key={collection._id} className="collection-option">
+                      <div className="collection-header">
+                        <h4>{collection.name}</h4>
+                        <span className="item-count">{collection.resources?.length || 0} items</span>
+                      </div>
+                      <p className="collection-description">{collection.description}</p>
+                      <button
+                        className="btn-add-to-collection"
+                        onClick={() => {
+                          handleAddToCollection(collection._id);
+                          setShowCollectionsModal(false);
+                        }}
+                      >
+                        Add to This Collection
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-collections">
+                  <p>You don't have any collections yet.</p>
+                  <a href="/dashboard" className="btn-create-collection">
+                    Create Your First Collection
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <div className="modal-actions">
+              <button type="button" className="btn-secondary" onClick={() => setShowCollectionsModal(false)}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
