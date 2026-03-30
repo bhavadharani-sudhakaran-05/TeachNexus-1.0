@@ -12,8 +12,12 @@ const setupRateLimiting = () => {
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
+  max: 10, // Increased from 5 to 10 attempts
   message: 'Too many login attempts, please try again later.',
+  skip: (req, res) => {
+    // Skip rate limiting in development
+    return process.env.NODE_ENV === 'development';
+  },
 });
 
 module.exports = { setupRateLimiting, authLimiter };

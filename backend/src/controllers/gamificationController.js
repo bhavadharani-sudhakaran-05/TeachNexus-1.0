@@ -132,11 +132,12 @@ exports.completeChallenge = async (req, res) => {
     await challenge.save();
 
     // Award XP
-    const gamification = await Gamification.findOne({ userId: req.userId });
-    if (gamification) {
-      gamification.totalXP += challenge.xpReward;
-      await gamification.save();
+    let gamification = await Gamification.findOne({ userId: req.userId });
+    if (!gamification) {
+      gamification = await Gamification.create({ userId: req.userId });
     }
+    gamification.totalXP += challenge.xpReward;
+    await gamification.save();
 
     await User.findByIdAndUpdate(req.userId, {
       $inc: { experiencePoints: challenge.xpReward },

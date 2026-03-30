@@ -7,6 +7,8 @@ const {
   joinCommunity,
   createDiscussionThread,
   getDiscussionThreads,
+  addDiscussionReply,
+  likeDiscussionThread,
 } = require('../controllers/communityController');
 
 const router = express.Router();
@@ -17,5 +19,7 @@ router.get('/:id', getCommunityById);
 router.post('/:id/join', protect, joinCommunity);
 router.post('/:communityId/discussions', protect, createDiscussionThread);
 router.get('/:communityId/discussions', getDiscussionThreads);
+router.post('/:communityId/discussions/:threadId/replies', protect, addDiscussionReply);
+router.post('/:communityId/discussions/:threadId/like', protect, likeDiscussionThread);
 
 module.exports = router;

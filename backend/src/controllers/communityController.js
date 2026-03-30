@@ -1,6 +1,7 @@
 const Community = require('../models/Community');
 const DiscussionThread = require('../models/DiscussionThread');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 exports.createCommunity = async (req, res) => {
   try {
@@ -70,7 +71,7 @@ exports.getCommunityById = async (req, res) => {
 
     const community = await Community.findById(id)
       .populate('creator', 'firstName lastName profilePicture')
-      .populate('discussions', '-replies');
+      .populate('discussionThreads', '-replies');
 
     if (!community) {
       return res.status(404).json({ message: 'Community not found' });
@@ -83,6 +84,79 @@ exports.getCommunityById = async (req, res) => {
   } catch (error) {
     console.error('Get community error:', error);
     return res.status(500).json({ message: 'Error fetching community' });
+  }
+};
+
+exports.addDiscussionReply = async (req, res) => {
+  try {
+    const { communityId, threadId } = req.params;
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ message: 'Reply content is required' });
+    }
+
+    const thread = await DiscussionThread.findOne({ _id: threadId, community: communityId });
+    if (!thread) {
+      return res.status(404).json({ message: 'Discussion thread not found' });
+    }
+
+    const reply = {
+      _id: new mongoose.Types.ObjectId(),
+      author: req.userId,
+      content: content.trim(),
+      likes: 0,
+      createdAt: new Date(),
+      isMarkedCorrect: false,
+    };
+
+    thread.replies.push(reply);
+    await thread.save();
+
+    await Community.findByIdAndUpdate(communityId, {
+      $inc: { totalPosts: 1, activityScore: 2 },
+    });
+
+    await User.findByIdAndUpdate(req.userId, {
+      $inc: { experiencePoints: 2, communityReputation: 1 },
+    });
+
+    const updatedThread = await DiscussionThread.findById(threadId)
+      .populate('author', 'firstName lastName profilePicture');
+
+    return res.status(201).json({
+      success: true,
+      message: 'Reply added successfully',
+      thread: updatedThread,
+    });
+  } catch (error) {
+    console.error('Add discussion reply error:', error);
+    return res.status(500).json({ message: 'Error adding reply' });
+  }
+};
+
+exports.likeDiscussionThread = async (req, res) => {
+  try {
+    const { communityId, threadId } = req.params;
+
+    const thread = await DiscussionThread.findOneAndUpdate(
+      { _id: threadId, community: communityId },
+      { $inc: { likes: 1 } },
+      { new: true }
+    ).populate('author', 'firstName lastName profilePicture');
+
+    if (!thread) {
+      return res.status(404).json({ message: 'Discussion thread not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Thread liked successfully',
+      thread,
+    });
+  } catch (error) {
+    console.error('Like discussion thread error:', error);
+    return res.status(500).json({ message: 'Error liking thread' });
   }
 };
 
