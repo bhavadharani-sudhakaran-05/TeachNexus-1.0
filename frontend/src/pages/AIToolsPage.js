@@ -41,6 +41,18 @@ const TOOL_CONFIG = [
     description: 'Find critical gaps in available resources',
     icon: '🎯',
   },
+  {
+    id: 'teachbot',
+    name: 'TeachBot Assistant',
+    description: 'Ask teaching questions and get practical support',
+    icon: '💬',
+  },
+  {
+    id: 'recommendations',
+    name: 'Resource Recommendations',
+    description: 'Discover top resources based on your profile',
+    icon: '✨',
+  },
 ];
 
 const EXAMPLES = {
@@ -70,6 +82,9 @@ const EXAMPLES = {
     subject: 'Science',
     gapGradeLevel: 'Grade 10',
   },
+  teachbot: {
+    teachbotQuery: 'How can I make photosynthesis lessons more interactive for mixed-ability students?',
+  },
 };
 
 const AIToolsPage = () => {
@@ -89,6 +104,7 @@ const AIToolsPage = () => {
     studentData: '',
     subject: '',
     gapGradeLevel: '',
+    teachbotQuery: '',
   });
 
   const selectedToolDetails = useMemo(
@@ -188,6 +204,7 @@ const AIToolsPage = () => {
       'whiteboard-scanner': ['whiteboardNotes'],
       'student-predictor': ['className', 'studentData'],
       'gap-analyzer': ['subject', 'gapGradeLevel'],
+      teachbot: ['teachbotQuery'],
     };
 
     const missing = (requiredByTool[selectedTool] || []).filter((key) => !String(formValues[key] || '').trim());
@@ -253,6 +270,14 @@ const AIToolsPage = () => {
             subject: formValues.subject,
             gradeLevel: formValues.gapGradeLevel,
           });
+          break;
+        case 'teachbot':
+          response = await aiToolsAPI.teachbotQuery({
+            query: formValues.teachbotQuery,
+          });
+          break;
+        case 'recommendations':
+          response = await aiToolsAPI.recommendResources();
           break;
         default:
           toast.error('Tool is not configured yet.');
@@ -448,6 +473,62 @@ const AIToolsPage = () => {
       );
     }
 
+    if (selectedTool === 'teachbot') {
+      const teachbotResponse = result.response || {};
+      return (
+        <div className="result-panel">
+          <h3>TeachBot Response</h3>
+          <p>{teachbotResponse.message || 'No response message available.'}</p>
+
+          <h4>Suggested Resources</h4>
+          {!teachbotResponse.suggestedResources?.length ? (
+            <p className="empty-inline">No suggested resources provided.</p>
+          ) : (
+            <div className="result-cards">
+              {teachbotResponse.suggestedResources.map((resource, index) => (
+                <div className="result-card" key={`${resource.title || 'resource'}-${index}`}>
+                  <p><strong>{resource.title || 'Untitled resource'}</strong></p>
+                  <p>{resource.description || 'No description available.'}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <h4>Follow-Up Questions</h4>
+          {renderList(teachbotResponse.followUpQuestions)}
+        </div>
+      );
+    }
+
+    if (selectedTool === 'recommendations') {
+      const recommendations = result.recommendations || [];
+
+      if (!recommendations.length) {
+        return (
+          <p className="result-placeholder">
+            No recommendations available yet. Try again after exploring or creating more resources.
+          </p>
+        );
+      }
+
+      return (
+        <div className="result-panel">
+          <h3>Recommended Resources</h3>
+          <div className="result-cards">
+            {recommendations.map((resource, index) => (
+              <div className="result-card" key={`${resource._id || resource.title || 'rec'}-${index}`}>
+                <p><strong>{resource.title || 'Untitled resource'}</strong></p>
+                <p>{resource.description || 'No description available.'}</p>
+                <p>
+                  Downloads: {resource.downloads ?? 0} | Rating: {resource.rating ?? 'N/A'}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="result-panel">
         <h3>Output</h3>
@@ -545,6 +626,28 @@ const AIToolsPage = () => {
               placeholder="Grade 9"
               required
             />
+          </>
+        );
+      case 'teachbot':
+        return (
+          <>
+            <label htmlFor="teachbotQuery">Ask TeachBot</label>
+            <textarea
+              id="teachbotQuery"
+              name="teachbotQuery"
+              value={formValues.teachbotQuery}
+              onChange={onChange}
+              placeholder="Ask a teaching strategy, classroom management, or pedagogy question"
+              required
+            />
+          </>
+        );
+      case 'recommendations':
+        return (
+          <>
+            <p className="empty-inline">
+              Fetch personalized recommendations using your teaching profile and subject specializations.
+            </p>
           </>
         );
       default:
